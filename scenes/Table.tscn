@@ -17,16 +17,37 @@ position = Vector2( 200, 450 )
 [node name="CPUS" type="Node2D" parent="."]
 position = Vector2( 500, 0 )
 
-[node name="CPU1" parent="CPUS" instance=ExtResource( 3 )]
-position = Vector2( 0, 450 )
+[node name="CPU3" parent="CPUS" instance=ExtResource( 3 )]
+position = Vector2( 350, 150 )
+rotation = -1.0472
 
 [node name="CPU2" parent="CPUS" instance=ExtResource( 3 )]
 position = Vector2( 200, 350 )
 rotation = -0.698132
 
-[node name="CPU3" parent="CPUS" instance=ExtResource( 3 )]
-position = Vector2( 350, 150 )
-rotation = -1.0472
+[node name="CPU1" parent="CPUS" instance=ExtResource( 3 )]
+position = Vector2( 0, 450 )
+
+[node name="Control" type="Control" parent="."]
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+margin_left = -20.0
+margin_top = -20.0
+margin_right = 20.0
+margin_bottom = 20.0
+
+[node name="CenterMessage" type="Label" parent="Control"]
+anchor_left = 13.729
+anchor_top = 6.579
+anchor_right = 13.729
+anchor_bottom = 6.579
+margin_left = -25.16
+margin_top = -8.16003
+margin_right = 26.84
+margin_bottom = 5.83997
+text = "You Win"
 
 [connection signal="game_state" from="." to="." method="_on_Table_game_state"]
 [connection signal="user_input" from="User" to="." method="_on_User_user_input"]

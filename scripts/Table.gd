@@ -1,5 +1,9 @@
 extends Node2D
 
+""" UI """
+onready var center_message_label = $Control/CenterMessage
+
+""" Players """
 onready var user = $User
 onready var dealer = $Dealer
 var cpus = []
@@ -15,6 +19,8 @@ enum {
 	RESULTS }
 	
 func _ready():
+	center_message_label.visible = false
+	
 	for i in get_node("CPUS").get_children():
 		cpus.append(i)
 	
@@ -55,57 +61,88 @@ func place_bets():
 	user.disable_all_buttons()
 	user.bet_high_button.disabled = false
 	user.bet_low_button.disabled = false
+	
+	center_message_label.visible = true
+	center_message_label.text = "Place a Bet"
 
 func inital_deal():
+	center_message_label.visible = false
 	user.disable_all_buttons()
 	
 	for i in range(2):
 		for j in cpus:
-			j.hit()
-		user.hit()
+			yield(j.hit(), "completed")
+		yield(user.hit(), "completed")
 		
 		if (i == 0):
-			dealer.hit()
+			yield(dealer.hit(), "completed")
 		else:
-			dealer.hit(false)
+			yield(dealer.hit(false), "completed")
 	
-	print("deal out cards")
+
 	emit_signal("game_state", CPUS_TURN)
 	
 func cpus_turn():
 	user.disable_all_buttons()
 	
 	for i in cpus:
-		i.play_turn()
+		yield(i.play_turn(), "completed")
 		
-	print("cpus play")
+	
 	emit_signal("game_state", USERS_TURN)
 	
 func users_turn():
 	user.disable_all_buttons()
 	user.stay_button.disabled = false
 	user.hit_button.disabled = false
-	print("user play")
+	user.doubledown_button.disabled = false
+
 
 func dealers_turn():
 	user.disable_all_buttons()
 	dealer.play_turn()
-	
-	#emit_signal("game_state", RESULTS)
+	emit_signal("game_state", RESULTS)
 	
 func results():
 	
 	# if there are double downs, flip these cards
-	user.face_up()
-	for i in cpus:
-		i.face_up()
+	#user.face_up()
+	#for i in cpus:
+	#	i.face_up()
 		
 	# do some sort of celebration
-		
+	yield(get_tree().create_timer(1), "timeout")
+	var res = did_user_win(dealer.count_high, user.count_high, user.count_low)
+	center_message_label.visible = true
+	center_message_label.text = res
+	yield(get_tree().create_timer(2.5), "timeout")
+	center_message_label.visible = false
+	
 	# reset
 	user.reset()
 	dealer.reset()
 	for i in cpus:
 		i.reset()
 		
+	emit_signal("game_state", PLACE_BETS)
 		
+func did_user_win(dealer_high, user_high, user_low):
+	if user_high > 21 && user_low > 21:
+		return "lose"
+	if dealer_high > 21:
+		return "win"
+
+	if user_high <= 21:
+		if user_high > dealer_high:
+			return "win"
+		elif user_high == dealer_high:
+			return "tie"
+		else:
+			return "lose"
+	
+	if user_low > dealer_high:
+		return "win"
+	elif user_low == dealer_high:
+		return "tie"
+	else:
+		return "lose"

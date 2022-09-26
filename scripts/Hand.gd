@@ -19,12 +19,12 @@ func instance_card(isUp):
 	var new_card = card_scene.instance()
 	var new_card_value = shoe.get_rand_card()
 	
-	new_card.setup(new_card_value[0], new_card_value[1], isUp)
+	add_child(new_card)
+	new_card.set_card(new_card_value[0], new_card_value[1], isUp)
 	new_card.scale *= 0.2
 	
 	add_to_count(new_card_value[0])
 	in_play_cards.append(new_card)
-	add_child(new_card)
 	
 func reset():
 	count_low = 0
@@ -38,6 +38,10 @@ func reset():
 func hit(isUp=true):
 	instance_card(isUp)
 	card_pos()
+	yield(get_tree().create_timer(1), "timeout")
+	
+func stay():
+	yield(get_tree().create_timer(0.3), "timeout")
 
 	
 func add_to_count(card):

@@ -53,13 +53,6 @@ margin_right = 114.0
 margin_bottom = 250.0
 text = "Double Down"
 
-[node name="Split" type="Button" parent="UI"]
-margin_left = 42.0
-margin_top = 257.0
-margin_right = 82.0
-margin_bottom = 277.0
-text = "Split"
-
 [node name="BetHigh" type="Button" parent="UI"]
 margin_left = -124.0
 margin_top = -14.0
@@ -77,6 +70,5 @@ text = "Low Bet"
 [connection signal="pressed" from="UI/Hit" to="." method="_on_Hit_pressed"]
 [connection signal="pressed" from="UI/Stay" to="." method="_on_Stay_pressed"]
 [connection signal="pressed" from="UI/DoubleDown" to="." method="_on_DoubleDown_pressed"]
-[connection signal="pressed" from="UI/Split" to="." method="_on_Split_pressed"]
 [connection signal="pressed" from="UI/BetHigh" to="." method="_on_BetHigh_pressed"]
 [connection signal="pressed" from="UI/BetLow" to="." method="_on_BetLow_pressed"]
